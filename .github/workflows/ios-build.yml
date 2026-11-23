@@ -33,6 +33,15 @@ jobs:
             -derivedDataPath build \
             build
 
+      - name: Run UI Tests
+        run: |
+          xcodebuild \
+            -project CounterApp.xcodeproj \
+            -scheme CounterApp \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -derivedDataPath build \
+            test
+
       - name: Upload app artifact
         uses: actions/upload-artifact@v4
         with:
