@@ -1,0 +1,40 @@
+
+name: iOS Build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build iOS app
+        run: |
+          xcodebuild \
+            -project CounterApp.xcodeproj \
+            -scheme CounterApp \
+            -sdk iphonesimulator \
+            -configuration Debug \
+            -derivedDataPath build \
+            build
+
+      - name: Upload app artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CounterApp-iOS
+          path: build/Build/Products/Debug-iphonesimulator/CounterApp.app
